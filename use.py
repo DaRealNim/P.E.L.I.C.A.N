@@ -36,9 +36,9 @@ def PE_find_text_section(data):
 
 if __name__ == '__main__':
 
-    print("+----------------------------+")
-    print("|  Nim's Malware Classifier  |")
-    print("+----------------------------+")
+    print("+-------------------------+")
+    print("|      P.E.L.I.C.A.N      |")
+    print("+-------------------------+")
     print()
 
     optdict = get_options()
