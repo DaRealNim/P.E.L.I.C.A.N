@@ -2,13 +2,17 @@
 *(**P**redictive **E**ngine for **L**earning and **I**dentification of **C**yber **A**nomalies and **N**uisances)*
 
 ## Overview
-PELICAN is a machine learning model for binary malware classification of windows Portable Executables. It is inspired by the architecture described in an [NVIDIA blog post on AI malware detection](https://developer.nvidia.com/blog/malware-detection-neural-networks/), but implements some regularization technices, and a slightly different architecture.
+PELICAN is a machine learning model for binary malware classification of windows Portable Executables. It is inspired by the architecture described in an [NVIDIA blog post on AI malware detection](https://developer.nvidia.com/blog/malware-detection-neural-networks/), but additionally implements some regularization techniques and architectural differences.
 
 The architecture is as follows:
 - 8 dimensional embeddings are learned for each byte
 - A gated convolutional layer with 128 filters, a kernel size and stride of 500
+- Batch normalization
 - Global max pooling
+- Dropout
 - A fully connected layer
+
+The model is defined in `model.py`.
 
 ## Current best results
 For the given task, PELICAN achieves the following metrics on the test set (20% of total dataset, "malware" is the positive class) after 8 epochs of training:
