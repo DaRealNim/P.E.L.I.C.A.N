@@ -10,6 +10,13 @@ The architecture is as follows:
 - Global max pooling
 - A fully connected layer
 
+## Current best results
+For the given task, PELICAN achieves the following metrics on the test set (20% of total dataset, "malware" is the positive class) after 8 epochs of training:
+
+| Accuracy | Precision | Recall | F1   | ROC AUC |
+|----------|-----------|--------|------|---------|
+| 0.96     | 0.92      | 0.93   | 0.92 | 0.98    |
+
 ## Setup
 Install the dependencies in `requirements.txt` using `pip install -r requirements.txt`. 
 
