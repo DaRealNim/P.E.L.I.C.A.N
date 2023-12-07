@@ -10,6 +10,8 @@ from optparse import OptionParser
 from pefile import PE, PEFormatError
 import glob
 from colorama import Fore, Back, Style
+import warnings
+warnings.filterwarnings("ignore", ".*Applied workaround for CuDNN issue.*")
 
 from model import ConvMalware
 
@@ -22,6 +24,8 @@ def get_options():
                         help="path to the executable to be classified")
     parser.add_option("-r", "--recursive", dest="recursive", action="store_true",
                         help="recursively classify all files in the directory")
+    parser.add_option("-d", "--device", dest="device", type="string",
+                        help="device to use (cpu or cuda)", default="cpu")
 
     (options, args) = parser.parse_args()
     optdict = vars(options)
@@ -44,6 +48,7 @@ if __name__ == '__main__':
     optdict = get_options()
     model_path = optdict['model_path']
     input_path = optdict['input_path']
+    device = torch.device(optdict['device'])
 
     if model_path is None or input_path is None:
         print('Please specify model path and input path')
@@ -94,8 +99,8 @@ if __name__ == '__main__':
     sentence = f"  Let's go! {len(batch)} file(s) to process  "
     print(" " * len(sentence))
     print(sentence)
-    print(" " * len(sentence))
-    print(Style.RESET_ALL)
+    print(" " * len(sentence) + Style.RESET_ALL)
+    print()
 
     # preprocess
     batch = [list(x) for x in batch]
@@ -103,12 +108,14 @@ if __name__ == '__main__':
 
     # load model
     model = ConvMalware()
-    model.load_state_dict(torch.load(model_path))
+    model.to(device)
+    model.load_state_dict(torch.load(model_path, map_location=device))
     model.eval()
 
     # predict
     with torch.no_grad():
         for i, x in enumerate(batch):
+            x = x.to(device)
             y = model(x)
             y = torch.sigmoid(y).item()
             malware = y > 0.5
